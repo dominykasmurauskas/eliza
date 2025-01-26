@@ -57,6 +57,7 @@ coverage
 .eslintcache
 
 agent/content
+agent/data/postgres
 
 eliza.manifest
 eliza.manifest.sgx

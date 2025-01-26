@@ -245,8 +245,21 @@ export class MessageManager {
                     `${event.ts}-${this.runtime.agentId}`
                 );
 
+                // Ensure user exists in database
+                console.log("👤 Step 5: Ensuring user exists");
+                await this.runtime.ensureUserExists(
+                    userId,
+                    event.user,
+                    event.user_name || event.user,
+                    'slack'
+                );
+
+                // Ensure room exists in database
+                console.log("🏠 Step 5b: Ensuring room exists");
+                await this.runtime.ensureRoomExists(roomId);
+
                 // Create initial memory
-                console.log("💾 Step 5: Creating initial memory");
+                console.log("💾 Step 6: Creating initial memory");
                 const content: Content = {
                     text: cleanedText,
                     source: "slack",
@@ -282,12 +295,12 @@ export class MessageManager {
 
                 // Add memory
                 if (content.text) {
-                    console.log("💾 Step 6: Saving initial memory");
+                    console.log("💾 Step 7: Saving initial memory");
                     await this.runtime.messageManager.createMemory(memory);
                 }
 
                 // Initial state composition
-                console.log("🔄 Step 7: Composing initial state");
+                console.log("🔄 Step 8: Composing initial state");
                 let state = await this.runtime.composeState(
                     { content, userId, agentId: this.runtime.agentId, roomId },
                     {
@@ -299,16 +312,16 @@ export class MessageManager {
                 );
 
                 // Update state with recent messages
-                console.log("🔄 Step 8: Updating state with recent messages");
+                console.log("🔄 Step 9: Updating state with recent messages");
                 state = await this.runtime.updateRecentMessageState(state);
 
                 // Check if we should respond
-                console.log("🤔 Step 9: Checking if we should respond");
+                console.log("🤔 Step 10: Checking if we should respond");
                 const shouldRespond = await this._shouldRespond(event, state);
 
                 if (shouldRespond) {
                     console.log(
-                        "✅ Step 10: Should respond - generating response"
+                        "✅ Step 11: Should respond - generating response"
                     );
                     const context = composeContext({
                         state,
@@ -325,14 +338,14 @@ export class MessageManager {
                     );
 
                     if (responseContent?.text) {
-                        console.log("📤 Step 11: Preparing to send response");
+                        console.log("📤 Step 12: Preparing to send response");
 
                         const callback: HandlerCallback = async (
                             content: Content
                         ) => {
                             try {
                                 console.log(
-                                    " Step 12: Executing response callback"
+                                    " Step 13: Executing response callback"
                                 );
                                 const result =
                                     await this.client.chat.postMessage({
@@ -344,7 +357,7 @@ export class MessageManager {
                                     });
 
                                 console.log(
-                                    "💾 Step 13: Creating response memory"
+                                    "💾 Step 14: Creating response memory"
                                 );
                                 const responseMemory: Memory = {
                                     id: stringToUuid(
@@ -365,7 +378,7 @@ export class MessageManager {
                                 };
 
                                 console.log(
-                                    "✓ Step 14: Marking message as processed"
+                                    "✓ Step 15: Marking message as processed"
                                 );
                                 this.processedMessages.set(
                                     messageKey,
@@ -373,7 +386,7 @@ export class MessageManager {
                                 );
 
                                 console.log(
-                                    "💾 Step 15: Saving response memory"
+                                    "💾 Step 16: Saving response memory"
                                 );
                                 await this.runtime.messageManager.createMemory(
                                     responseMemory
@@ -386,18 +399,18 @@ export class MessageManager {
                             }
                         };
 
-                        console.log("📤 Step 16: Sending initial response");
+                        console.log("📤 Step 17: Sending initial response");
                         const responseMessages =
                             await callback(responseContent);
 
                         console.log(
-                            "🔄 Step 17: Updating state after response"
+                            "🔄 Step 18: Updating state after response"
                         );
                         state =
                             await this.runtime.updateRecentMessageState(state);
 
                         if (responseContent.action) {
-                            console.log("⚡ Step 18: Processing actions");
+                            console.log("⚡ Step 19: Processing actions");
                             await this.runtime.processActions(
                                 memory,
                                 responseMessages,
