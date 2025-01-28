@@ -38,6 +38,7 @@ Respond with [RESPOND] to messages that:
 - Directly mention @{{agentName}}
 - Are follow-ups to {{agentName}}'s previous messages
 - Are relevant to ongoing conversations {{agentName}} is part of
+- Are heavily focused on {{agentName}} or mentioning this game as part of some question
 
 Respond with [IGNORE] to messages that:
 - Are not directed at {{agentName}}
@@ -55,7 +56,7 @@ Only respond when explicitly mentioned or when clearly part of an ongoing conver
 
 {{recentMessages}}
 
-# INSTRUCTIONS: Choose the option that best describes {{agentName}}'s response to the last message. Ignore messages if they are not directed at {{agentName}}.
+# INSTRUCTIONS: Choose the option that best describes {{agentName}}'s response to the last message. Ignore messages if they are not directed at {{agentName}} or not asking anything about {{agentName}}.
 ` + shouldRespondFooter;
 
 export const slackMessageHandlerTemplate =

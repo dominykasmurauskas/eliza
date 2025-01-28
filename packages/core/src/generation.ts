@@ -251,6 +251,7 @@ export async function generateText({
     }
 
     elizaLogger.log("Generating text...");
+    elizaLogger.log("Prompt for generating response: ", { context });
 
     elizaLogger.info("Generating text with options:", {
         modelProvider: runtime.modelProvider,
@@ -417,7 +418,6 @@ export async function generateText({
                 elizaLogger.debug("Initializing OpenAI model with Cloudflare check");
                 const baseURL = getCloudflareGatewayBaseURL(runtime, 'openai') || endpoint;
 
-                //elizaLogger.debug("OpenAI baseURL result:", { baseURL });
                 const openai = createOpenAI({
                     apiKey,
                     baseURL,
