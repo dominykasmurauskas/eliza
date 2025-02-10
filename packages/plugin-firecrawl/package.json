@@ -1,0 +1,38 @@
+{
+    "name": "@elizaos/plugin-firecrawl",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "import": {
+                "@elizaos/source": "./src/index.ts",
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "@elizaos/core": "workspace:*",
+        "@mendable/firecrawl-js": "^1.0.0",
+        "p-queue": "^7.4.1",
+        "url-parse": "^1.5.10"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.5",
+        "@types/url-parse": "^1.4.11",
+        "tsup": "^8.0.1",
+        "typescript": "^5.3.3"
+    },
+    "scripts": {
+        "build": "tsup --format esm --dts",
+        "dev": "tsup --format esm --dts --watch",
+        "lint": "eslint --fix  --cache ."
+    }
+}
